@@ -28,36 +28,36 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // #define dryRunPin D8   // attach pin D8 ESP8266 to pin Dry Run indication
 
 // define variables
-bool pump_running = false;        // variable for the pump status
-bool pump_switch = false;         // variable for the pump switch status
-int pump_start_level = 0;         // variable for the pump start level
+bool pump_running = false;            // variable for the pump status
+bool pump_switch = false;             // variable for the pump switch status
+int pump_start_level = 0;             // variable for the pump start level
 int dry_run_check_interval = 480 / 2; // variable for the dry run check interval value of 480 seconds = 8 minutes
-int dry_run_check_counter = 0;    // variable for the dry run counter
-bool dry_run_wait = false;        // variable for the dry run flag
-int dry_run_wait_counter = 0;     // variable for the dry run wait counter
-int dry_run_wait_interval = 5400/2; // variable for the dry run wait interval value of 5400 seconds = 90 minutes
+int dry_run_check_counter = 0;        // variable for the dry run counter
+bool dry_run_wait = false;            // variable for the dry run flag
+int dry_run_wait_counter = 0;         // variable for the dry run wait counter
+int dry_run_wait_interval = 5400 / 2; // variable for the dry run wait interval value of 5400 seconds = 90 minutes
 
 // define constants
-const int max_range = 450;           // constant for the maximum range of the sensor
-const float speed_of_sound = 0.0343; // constant for the speed of sound in cm/s
-const int water_stop_distance = 25;  // constant for the water stop distance
-const int tank_height = TANKHEIGHT;  // constant for the tank height
+const int max_range = 450;                 // constant for the maximum range of the sensor
+const float speed_of_sound = 0.0343;       // constant for the speed of sound in cm/s
+const int water_stop_distance = 25;        // constant for the water stop distance
+const int tank_height = TANKHEIGHT;        // constant for the tank height
 const int water_level_low = WATERLEVELLOW; // constant for the water level low
-const int mqtt_timeout = 1;          // constant for the mqtt timeout set to 1 second
+const int mqtt_timeout = 1;                // constant for the mqtt timeout set to 1 second
 
 // WiFi Status LED
 // #define wifiLed D0 // D0
 
 // Update these with values suitable for your network.
 
-const char *ssid = SSID;           // WiFI Name
-const char *password = PASSWORD;   // WiFi Password
+const char *ssid = SSID;         // WiFI Name
+const char *password = PASSWORD; // WiFi Password
 const char *mqttServer = MQTTSERVER;
 const char *mqttUser = MQTTUSER;
 const char *mqttPassword = MQTTPASS;
-const char *clientID = CLIENTID;            // client id
-const char *topicR = TOPICR;                // topic for receiving commands
-const char *topicP = TOPICP;                // topic for sending data
+const char *clientID = CLIENTID; // client id
+const char *topicR = TOPICR;     // topic for receiving commands
+const char *topicP = TOPICP;     // topic for sending data
 
 WiFiClient espClient;
 PubSubClient client(espClient);
