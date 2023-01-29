@@ -28,14 +28,14 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // #define dryRunPin D8   // attach pin D8 ESP8266 to pin Dry Run indication
 
 // define variables
-bool pump_running = false;            // variable for the pump status
-bool pump_switch = false;             // variable for the pump switch status
-int pump_start_level = 0;             // variable for the pump start level
-int dry_run_check_interval = 480 / 2; // variable for the dry run check interval value of 480 seconds = 8 minutes
-int dry_run_check_counter = 0;        // variable for the dry run counter
-bool dry_run_wait = false;            // variable for the dry run flag
-int dry_run_wait_counter = 0;         // variable for the dry run wait counter
-int dry_run_wait_interval = 5400 / 2; // variable for the dry run wait interval value of 5400 seconds = 90 minutes
+bool pump_running = false;        // variable for the pump status
+bool pump_switch = false;         // variable for the pump switch status
+int pump_start_level = 0;         // variable for the pump start level
+int dry_run_check_interval = 480; // variable for the dry run check interval value of 480 seconds = 8 minutes
+int dry_run_check_counter = 0;    // variable for the dry run counter
+bool dry_run_wait = false;        // variable for the dry run flag
+int dry_run_wait_counter = 0;     // variable for the dry run wait counter
+int dry_run_wait_interval = 5400; // variable for the dry run wait interval value of 5400 seconds = 90 minutes
 
 // define constants
 const int max_range = 450;                 // constant for the maximum range of the sensor
@@ -44,6 +44,7 @@ const int water_stop_distance = 25;        // constant for the water stop distan
 const int tank_height = TANKHEIGHT;        // constant for the tank height
 const int water_level_low = WATERLEVELLOW; // constant for the water level low
 const int mqtt_timeout = 1;                // constant for the mqtt timeout set to 1 second
+const int iteration = 3;                   // constant for number of iteration to be used for determining water distance
 
 // WiFi Status LED
 // #define wifiLed D0 // D0
@@ -147,11 +148,11 @@ void loop()
 
     waterLevelController(); // call the function to control the water level
     // Get status every one seconds
-    delay(1000); // delay for 1 second
+    delay(500); // delay for 500 millisecond
     // stop led to indicate the end of the loop
     digitalWrite(pulsePin, LOW); // set the pulse pin to LOW
-    // delay for a 1 second to keep led off
-    delay(1000);
+    // delay for a 500 millisecond to keep led off
+    delay(500);
 }
 
 void setup_wifi()
@@ -322,6 +323,18 @@ long getDistance()
     return distance;                                          // returns the distance in cm
 }
 
+long getAveragedDistance()
+{                                       
+    int val = 0;
+
+    for (int i = 0; i < iteration; i++)
+    {
+        val = val + getDistance();
+    }
+
+    return val / iteration;
+}
+
 int getWaterLevel(int distance)
 {
     int water_level = tank_height - distance;
@@ -428,7 +441,7 @@ void processDryRunProtect(int level)
 
 void waterLevelController()
 {
-    int distance = getDistance();
+    int distance = getAveragedDistance();
     int level = getWaterLevel(distance);
     int per = getWaterLevelInPercentage(level);
     // max distance is 300 cm
